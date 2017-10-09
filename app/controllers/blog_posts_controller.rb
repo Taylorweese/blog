@@ -3,7 +3,7 @@ class BlogPostsController < ApplicationController
   before_action :set_blog_post, only: [:show, :edit, :destroy, :update]
   
   def index
-    @blog_posts = BlogPost.all
+    @blog_posts = BlogPost.order(created_at: :desc).page(params[:page])
   end
 
   def show
@@ -15,6 +15,10 @@ class BlogPostsController < ApplicationController
 
   def new
     @blog_post = BlogPost.new
+  end
+  
+  def user_posts
+    @user = User.find_by(username: params[:name])
   end
   
   def create
@@ -56,6 +60,6 @@ class BlogPostsController < ApplicationController
   end
   
   def blog_post_params
-    params.require(:blog_post).permit(:title, :blog_entry, :author)
+    params.require(:blog_post).permit( :title, :blog_entry, :user_id)
   end
 end
